@@ -8,6 +8,8 @@ import os
 from handlers.lang import handle_lang, handle_lang_choice
 from telegram.ext import CallbackQueryHandler
 from handlers.reset import handle_reset, handle_reset_callback
+from handlers.settings import handle_settings, handle_period_selection
+
 
 
 
@@ -35,6 +37,9 @@ if __name__ == '__main__':
     app.add_handler(CallbackQueryHandler(handle_lang_choice, pattern="^lang_"))
     app.add_handler(CommandHandler("reset", handle_reset))
     app.add_handler(CallbackQueryHandler(handle_reset_callback, pattern="^confirm_reset|cancel_reset$"))
+    app.add_handler(CommandHandler("settings", handle_settings))
+    app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
+
 
 
     app.run_polling()
