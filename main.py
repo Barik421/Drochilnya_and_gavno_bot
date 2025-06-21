@@ -4,6 +4,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from dotenv import load_dotenv
 from handlers.record import handle_fap, handle_poop
 from telegram.ext import CommandHandler
+from handlers.stats import handle_stats
+
 
 # Завантаження змінних із .env
 load_dotenv()
@@ -20,3 +22,4 @@ if __name__ == '__main__':
     app.run_polling()
     app.add_handler(CommandHandler("fap", handle_fap))
     app.add_handler(CommandHandler("poop", handle_poop))
+    app.add_handler(CommandHandler("stats", handle_stats))

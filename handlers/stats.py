@@ -1,5 +1,8 @@
 from telegram import Update
 from telegram.ext import ContextTypes
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from services.db import connect
 from datetime import datetime, timedelta
 
