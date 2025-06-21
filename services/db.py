@@ -89,3 +89,10 @@ def get_report_period(chat_id: int):
         cur.execute('SELECT report_period FROM settings WHERE chat_id = ?', (chat_id,))
         row = cur.fetchone()
         return row[0] if row else 'year'
+    
+def get_lang(chat_id: int):
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT lang FROM settings WHERE chat_id = ?", (chat_id,))
+        row = cur.fetchone()
+        return row[0] if row else 'uk'
