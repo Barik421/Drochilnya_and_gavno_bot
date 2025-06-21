@@ -16,6 +16,7 @@ from handlers.lang import handle_lang, handle_lang_choice
 from handlers.reset import handle_reset, handle_reset_callback
 from handlers.settings import handle_settings, handle_period_selection
 from scheduler import start_scheduler
+from handlers.stats import handle_report_test
 
 # Налаштування логування
 logging.basicConfig(
@@ -46,7 +47,8 @@ async def main():
         BotCommand("lang", "🌐 Змінити мову"),
         BotCommand("reset", "♻️ Обнулити статистику"),
         BotCommand("fap", "✊ Додати дрочіння"),
-        BotCommand("poop", "💩 Додати какання")
+        BotCommand("poop", "💩 Додати какання"),
+        BotCommand("reporttest", "🧪 Тест надсилання статистики")
     ]
     await app.bot.set_my_commands(commands)
 
@@ -61,6 +63,8 @@ async def main():
     app.add_handler(CallbackQueryHandler(handle_reset_callback, pattern="^confirm_reset|cancel_reset$"))
     app.add_handler(CommandHandler("settings", handle_settings))
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
+    app.add_handler(CommandHandler("reporttest", handle_report_test))
+    
 
     # Старт планувальника
     start_scheduler(app.bot)
@@ -73,3 +77,5 @@ if __name__ == "__main__":
     import nest_asyncio
     nest_asyncio.apply()
     asyncio.run(main())
+
+

@@ -91,7 +91,7 @@ async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(text, parse_mode="HTML")
 
-    
+
 
 from services.db import get_language, get_user_stats
 from telegram import Bot
@@ -120,3 +120,8 @@ async def send_stats(chat_id: int, bot: Bot = None):
         text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await bot.send_message(chat_id, text)
+
+
+async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await send_stats(chat_id, context.bot)
