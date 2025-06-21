@@ -6,6 +6,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from services.db import connect
 from datetime import datetime, timedelta
 from services.translations import tr
+from telegram import Update
+from telegram.ext import ContextTypes
+from services.db import get_language, get_user_stats
+from services.translations import tr
+from telegram import Bot
+
+async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await send_stats(chat_id, context.bot)
 
 def get_stats(user_id, chat_id, period):
     with connect() as conn:
@@ -55,41 +64,32 @@ def get_group_stats(chat_id, period):
 from services.translations import tr
 
 async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
     chat_id = update.effective_chat.id
-    args = context.args
+    lang = get_language(chat_id)
+    stats, start_date = get_user_stats(chat_id)
 
-    period = args[0].lower() if args else "today"
-    if period not in ("today", "week", "month", "year"):
-        period = "today"
+    if not stats:
+        await update.message.reply_text(tr(chat_id, "no_data"))
+        return
 
-    personal = get_stats(user_id, chat_id, period)
-    group = get_group_stats(chat_id, period)
+    from datetime import datetime
+    today = datetime.utcnow().strftime("%d.%m.%Y")
+    start_str = start_date.strftime("%d.%m.%Y") if start_date else "?"
 
-    faps = personal.get("fap", 0)
-    poops = personal.get("poop", 0)
-    kd = round(poops / faps, 2) if faps else "∞"
+    period_line = f"🗓️ {tr(chat_id, 'period')}: {start_str} — {today}"
+    title = "📊 Статистика" if lang == "uk" else "📊 Stats"
 
-    # 🧠 Персональна статистика
-    text = f"📊 <b>{tr(chat_id, 'your_stats', period=period)}:</b>\n"
-    text += f"{tr(chat_id, 'fap')}: {faps}\n"
-    text += f"{tr(chat_id, 'poop')}: {poops}\n"
-    text += f"{tr(chat_id, 'kd')}: {kd}\n\n"
+    text = f"{title}\n{period_line}\n\n"
+    sorted_stats = sorted(stats.items(), key=lambda x: (x[1]['fap'] + x[1]['poop']), reverse=True)
 
-    # 🧠 Групова статистика
-    text += f"👥 <b>{tr(chat_id, 'group_stats', period=period)}:</b>\n"
-    summary = {}
-    for uid, act, count in group:
-        if uid not in summary:
-            summary[uid] = {"fap": 0, "poop": 0}
-        summary[uid][act] += count
+    for user_id, data in sorted_stats:
+        faps = data['fap']
+        poops = data['poop']
+        kd = round(faps / poops, 2) if poops != 0 else "∞"
 
-    sorted_summary = sorted(summary.items(), key=lambda x: x[1]["poop"] + x[1]["fap"], reverse=True)
-    for idx, (uid, actions) in enumerate(sorted_summary, 1):
-        total = actions["fap"] + actions["poop"]
-        text += f"{idx}. ID: <code>{uid}</code> — {total} {tr(chat_id, 'actions_total')} (✊ {actions['fap']}, 💩 {actions['poop']})\n"
+        text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
-    await update.message.reply_text(text, parse_mode="HTML")
+    await update.message.reply_text(text)
 
 
 # Статистика таймерів
@@ -128,3 +128,5 @@ async def send_stats(chat_id: int, bot: Bot = None):
         text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await bot.send_message(chat_id, text)
+
+
