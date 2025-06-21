@@ -21,13 +21,13 @@ def init_db():
             )
         ''')
 
-        # Таблиця налаштувань (мова)
         cur.execute('''
-            CREATE TABLE IF NOT EXISTS settings (
-                chat_id INTEGER PRIMARY KEY,
-                lang TEXT DEFAULT 'uk'
-            )
-        ''')
+        CREATE TABLE IF NOT EXISTS settings (
+            chat_id INTEGER PRIMARY KEY,
+            lang TEXT DEFAULT 'uk',
+            report_period TEXT DEFAULT 'year'
+        )
+    ''')
 
         conn.commit()
 
@@ -71,3 +71,21 @@ def delete_user_data(chat_id: int, user_id: int):
             WHERE chat_id = ? AND user_id = ?
         ''', (chat_id, user_id))
         conn.commit()
+
+# Таймери для статистики
+def set_report_period(chat_id: int, period: str):
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            INSERT INTO settings (chat_id, report_period)
+            VALUES (?, ?)
+            ON CONFLICT(chat_id) DO UPDATE SET report_period=excluded.report_period
+        ''', (chat_id, period))
+        conn.commit()
+
+def get_report_period(chat_id: int):
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT report_period FROM settings WHERE chat_id = ?', (chat_id,))
+        row = cur.fetchone()
+        return row[0] if row else 'year'
