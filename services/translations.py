@@ -22,8 +22,35 @@ translations = {
     "no_activity": {
         "uk": "🤷 Немає активності цього року. Хто ж буде першим у новому?",
         "en": "🤷 No activity this year. Who will start the next one?"
+    },
+    "your_stats": {
+        "uk": "Твоя статистика ({period})",
+        "en": "Your statistics ({period})"
+    },
+    "group_stats": {
+        "uk": "Загальна статистика ({period})",
+        "en": "Group statistics ({period})"
+    },
+    "fap": {
+        "uk": "✊ Дрочив",
+        "en": "✊ Fapped"
+    },
+    "poop": {
+        "uk": "💩 Какав",
+        "en": "💩 Pooped"
+    },
+    "kd": {
+        "uk": "КД",
+        "en": "K/D"
+    },
+    "actions_total": {
+        "uk": "дій",
+        "en": "actions"
     }
 }
+
+
+
 
 from services.db import get_lang
 
