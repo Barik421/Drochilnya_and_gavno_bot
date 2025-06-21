@@ -19,11 +19,17 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 # Команда /start
+from services.translations import tr
+from services.db import get_language
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привіт! Я бот Дрочильня 💩✊\nВикористовуй /fap або /poop для запису.\n/stats — щоб побачити статистику!")
+    chat_id = update.effective_chat.id
+    text = tr(chat_id, "start")
+    await update.message.reply_text(text)
 
 # Запуск бота
 if __name__ == '__main__':
+    import nest_asyncio
     import asyncio
 
     async def main():
@@ -33,10 +39,12 @@ if __name__ == '__main__':
 
         commands = [
             BotCommand("start", "Запуск бота"),
-            BotCommand("stats", "Статистика"),
-            BotCommand("settings", "Налаштування звітів"),
-            BotCommand("lang", "Змінити мову"),
-            BotCommand("reset", "Обнулити статистику")
+            BotCommand("stats", "📊 Статистика"),
+            BotCommand("settings", "🔧 Налаштування звітів"),
+            BotCommand("lang", "🌐 Змінити мову"),
+            BotCommand("reset", "♻️ Обнулити статистику"),
+            BotCommand("fap", "✊ Додати дрочіння"),
+            BotCommand("poop", "💩 Додати какання")
         ]
         await app.bot.set_my_commands(commands)
 
@@ -55,6 +63,7 @@ if __name__ == '__main__':
 
         await app.run_polling()
 
+    nest_asyncio.apply()
     asyncio.run(main())
 
 
