@@ -46,6 +46,10 @@ translations = {
     "actions_total": {
         "uk": "дій",
         "en": "actions"
+    },
+    "start": {
+        "uk": "Привіт! Я бот Дрочильня 👋\n\nНадішли /fap або /poop, щоб записати дію.\n/stats — щоб переглянути статистику.",
+        "en": "Hi! I am Drochilnya bot 👋\n\nSend /fap or /poop to record an action.\n/stats — to view your stats."
     }
 }
 
