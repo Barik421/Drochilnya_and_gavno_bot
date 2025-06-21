@@ -12,7 +12,7 @@ async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     current = get_report_period(update.effective_chat.id)
-    mapping = {"week": "📅 Щотижня", "month": "🗓 Щомісяця", "year": "📆 Щороку"}
+    mapping = {"week": "Щотижня", "month": "Щомісяця", "year": "Щороку"}
 
     await update.message.reply_text(
         f"🔧 Обери як часто отримувати статистику:\n\nПоточне значення: {mapping.get(current, '📆 Щороку')}",
@@ -35,4 +35,4 @@ async def handle_period_selection(update: Update, context: ContextTypes.DEFAULT_
 
     if data in mapping:
         set_report_period(chat_id, mapping[data])
-        await query.edit_message_text("✅ Налаштування збережено.")
+        await query.edit_message_text(tr(chat_id, "period_saved"))

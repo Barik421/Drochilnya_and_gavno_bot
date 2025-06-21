@@ -1,7 +1,9 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from services.db import add_action, connect
+from services.db import add_action, get_language
+from services.translations import tr
 from datetime import datetime
+from services.db import connect
 
 LIMIT_PER_DAY = 6
 
@@ -22,13 +24,22 @@ async def handle_action(update: Update, context: ContextTypes.DEFAULT_TYPE, acti
 
     count = get_action_count(user_id, action_type, today)
 
+    lang = get_language(chat_id)
+
     if count >= LIMIT_PER_DAY:
-        await update.message.reply_text("🚫 Ліміт досягнуто! Не більше 6 разів на день 😉")
+        await update.message.reply_text(tr(chat_id, "limit_reached"))
         return
 
     add_action(user_id, chat_id, action_type)
-    emoji = "💩" if action_type == "poop" else "✊"
-    await update.message.reply_text(f"{emoji} Записано! ({count + 1}/6)")
+
+    if action_type == "poop":
+        emoji = "💩"
+    else:
+        emoji = "✊"
+
+    await update.message.reply_text(
+    tr(chat_id, "action_recorded", emoji=emoji, count=count + 1, limit=LIMIT_PER_DAY)
+)
 
 async def handle_fap(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await handle_action(update, context, "fap")

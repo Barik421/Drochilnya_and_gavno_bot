@@ -33,12 +33,12 @@ async def send_yearly_report():
             winner = get_winner(chat_id)
             if winner:
                 user_id, username, total = winner
-                text = f"🎉 Переможець року по дрочильні і сранню у цьому чаті: @{username or 'невідомий'}!\nЗагалом дій: {total}\nВітаємо! 🥳"
+                text = f"🎉 Переможець року по дрочильні і сранню в цьому чаті: @{username or 'невідомий'}!\nЗагалом дій: {total}\nВітаємо! 🥳"
             else:
                 text = "🤷 Немає активності цього року. Хто ж буде першим у новому?"
 
             try:
-                await bot.send_message(chat_id=chat_id, text=text)
+                await bot.send_message(chat_id, tr(chat_id, "winner", username=username, count=total))
             except Exception as e:
                 print(f"⚠️ Не вдалося надіслати повідомлення в {chat_id}: {e}")
 

@@ -50,9 +50,21 @@ translations = {
     "start": {
         "uk": "Привіт! Я бот Дрочильня 👋\n\nНадішли /fap або /poop, щоб записати дію.\n/stats — щоб переглянути статистику.",
         "en": "Hi! I am Drochilnya bot 👋\n\nSend /fap or /poop to record an action.\n/stats — to view your stats."
-    }
+    },
+    "limit_reached": {
+        "uk": "⛔ Ліміт досягнуто! Не більше 6 разів на день 😬",
+        "en": "⛔ Limit reached! No more than 6 times a day 😬"
+    },
+    "action_recorded": {
+        "uk": "{emoji} Записано! ({count} / {limit})",
+        "en": "{emoji} Recorded! ({count} / {limit})"
+    },
+    "reset_prompt": {"uk": "🔁 Ви дійсно хочете обнулити статистику?", "en": "🔁 Do you really want to reset stats?"},
+    "confirm_reset": {"uk": "✅ Так, обнулити", "en": "✅ Yes, reset"},
+    "cancel_reset": {"uk": "❌ Ні, скасувати", "en": "❌ No, cancel"},
+    "reset_done": {"uk": "✅ Статистика обнулена!", "en": "✅ Stats have been reset!"},
+    "reset_canceled": {"uk": "❌ Скасовано.", "en": "❌ Cancelled."}
 }
-
 
 
 

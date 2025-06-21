@@ -1,31 +1,26 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes
-from services.db import delete_user_data
+from services.db import clear_user_stats, get_language
+from services.translations import tr
 
-# Команда /reset — запит підтвердження
 async def handle_reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message.chat.type != "private":
-        await update.message.reply_text("❗ Скидання статистики в групі поки недоступне. Скоро додамо підтримку голосування!")
-        return
+    chat_id = update.effective_chat.id
+    lang = get_language(chat_id)
 
-    keyboard = [
-        [
-            InlineKeyboardButton("✅ Так", callback_data="confirm_reset"),
-            InlineKeyboardButton("❌ Ні", callback_data="cancel_reset"),
-        ]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("⚠️ Ти впевнений, що хочеш обнулити ВСЮ свою статистику?", reply_markup=reply_markup)
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(tr(chat_id, "confirm_reset"), callback_data="confirm_reset")],
+        [InlineKeyboardButton(tr(chat_id, "cancel_reset"), callback_data="cancel_reset")]
+    ])
+    await update.message.reply_text(tr(chat_id, "reset_prompt"), reply_markup=keyboard)
 
-# Обробка кнопок підтвердження
 async def handle_reset_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     chat_id = query.message.chat.id
     user_id = query.from_user.id
+    lang = get_language(chat_id)
 
     if query.data == "confirm_reset":
-        delete_user_data(chat_id, user_id)
-        await query.edit_message_text("✅ Вся твоя статистика обнулена.")
+        clear_user_stats(user_id)
+        await query.edit_message_text(tr(chat_id, "reset_done"))
     else:
-        await query.edit_message_text("❌ Скасовано. Дані залишились без змін.")
+        await query.edit_message_text(tr(chat_id, "reset_canceled"))
