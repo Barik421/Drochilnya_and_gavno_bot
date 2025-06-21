@@ -4,6 +4,7 @@ from services.db import add_action, get_language
 from services.translations import tr
 from datetime import datetime
 from services.db import connect
+from services.user_utils import update_user_info
 
 LIMIT_PER_DAY = 6
 
@@ -42,7 +43,21 @@ async def handle_action(update: Update, context: ContextTypes.DEFAULT_TYPE, acti
 )
 
 async def handle_fap(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await handle_action(update, context, "fap")
+    update_user_info(update)
+
+    user_id = update.effective_user.id
+    chat_id = update.effective_chat.id
+    add_action(user_id, chat_id, "fap")
+
+    await update.message.reply_text(tr(chat_id, "fap_recorded"))
 
 async def handle_poop(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await handle_action(update, context, "poop")
+    update_user_info(update)
+
+    user_id = update.effective_user.id
+    chat_id = update.effective_chat.id
+    add_action(user_id, chat_id, "poop")
+
+    await update.message.reply_text(tr(chat_id, "poop_recorded"))
+    
+print(update_user_info)

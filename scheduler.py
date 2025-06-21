@@ -59,7 +59,7 @@ async def send_winner_announcement(chat_id: int, bot):
             winners.append((user_id, data))
 
     lang = get_language(chat_id)
-    title = "🎉 Вітаю! Переможцем 2025 року по каканню й дрочінню стає" if lang == "uk" else \
+    title = "🎉 Вітаю! Переможцем 2025 року по каканню й дрочінню стає:" if lang == "uk" else \
             "🎉 Congratulations! The 2025 Champion of Pooping and Fapping is"
 
     message = f"{title}\n"

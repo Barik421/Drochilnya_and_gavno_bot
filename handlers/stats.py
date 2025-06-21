@@ -12,6 +12,7 @@ from services.db import get_language, get_user_stats
 from services.translations import tr
 from telegram import Bot
 
+
 async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     await send_stats(chat_id, context.bot)
@@ -69,10 +70,12 @@ async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     stats, start_date = get_user_stats(chat_id)
 
     if not stats:
-        await update.message.reply_text(tr(chat_id, "no_data"))
+        try:
+            await update.message.reply_text(tr(chat_id, "no_data"))
+        except Exception as e:
+            print("❌ Помилка при надсиланні повідомлення:", e)
         return
 
-    from datetime import datetime
     today = datetime.utcnow().strftime("%d.%m.%Y")
     start_str = start_date.strftime("%d.%m.%Y") if start_date else "?"
 

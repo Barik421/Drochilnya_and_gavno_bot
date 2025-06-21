@@ -16,9 +16,8 @@ from handlers.lang import handle_lang, handle_lang_choice
 from handlers.reset import handle_reset, handle_reset_callback
 from handlers.settings import handle_settings, handle_period_selection
 from scheduler import start_scheduler
-from handlers.stats import handle_report_test
-from handlers.stats import handle_stats, send_stats, handle_report_test
-from handlers.stats import handle_winner_test
+from handlers.stats import handle_stats, send_stats, handle_report_test, handle_winner_test
+
 
 # Налаштування логування
 logging.basicConfig(
@@ -41,7 +40,7 @@ async def main():
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
-    # Встановлення команд
+    # Команди
     commands = [
         BotCommand("start", "Запуск бота"),
         BotCommand("stats", "📊 Статистика"),
@@ -68,18 +67,25 @@ async def main():
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
     app.add_handler(CommandHandler("reporttest", handle_report_test))
     app.add_handler(CommandHandler("winner", handle_winner_test))
-    
 
-    # Старт планувальника
+    # ✅ Обробник помилок
+    from telegram.error import TelegramError
+
+    async def error_handler(update, context):
+        print(f"❌ Помилка: {context.error}")
+
+    app.add_error_handler(error_handler)
+
+    # ✅ Планувальник
     start_scheduler(app.bot)
 
-    # Запуск бота
+    # ✅ Запуск бота
     await app.run_polling()
+
 
 # Запуск через asyncio
 if __name__ == "__main__":
     import nest_asyncio
     nest_asyncio.apply()
     asyncio.run(main())
-
 

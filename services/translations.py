@@ -59,7 +59,7 @@ translations = {
         "uk": "{emoji} Записано! ({count} / {limit})",
         "en": "{emoji} Recorded! ({count} / {limit})"
     },
-    
+
     "reset_prompt": {"uk": "🔁 Ви дійсно хочете обнулити статистику?", "en": "🔁 Do you really want to reset stats?"},
     "confirm_reset": {"uk": "✅ Так, обнулити", "en": "✅ Yes, reset"},
     "cancel_reset": {"uk": "❌ Ні, скасувати", "en": "❌ No, cancel"},
@@ -70,6 +70,21 @@ translations = {
     "uk": "Період",
     "en": "Period"
         },
+
+        "period": {
+        "uk": "Період",
+        "en": "Period"
+    },
+
+    "fap_recorded": {
+        "uk": "✊ Дрочіння зараховано!",
+        "en": "✊ Fap recorded!"
+    },
+    "poop_recorded": {
+        "uk": "💩 Какання зараховано!",
+        "en": "💩 Poop recorded!"
+    }
+        
 }
 
 
