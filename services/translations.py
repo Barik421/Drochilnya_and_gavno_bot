@@ -76,15 +76,24 @@ translations = {
         "en": "Period"
     },
 
-    "fap_recorded": {
+        "fap_recorded": {
         "uk": "✊ Дрочіння зараховано!",
         "en": "✊ Fap recorded!"
     },
     "poop_recorded": {
         "uk": "💩 Какання зараховано!",
         "en": "💩 Poop recorded!"
-    }
-        
+    },
+
+    "cooldown_fap": {
+    "uk": "⏳ Почекай трохи перед наступним дрочінням.",
+    "en": "⏳ Wait a bit before fapping again."
+    },
+    "cooldown_poop": {
+        "uk": "⏳ Почекай трохи перед наступним каканням.",
+        "en": "⏳ Wait a bit before pooping again."
+    },
+                
 }
 
 

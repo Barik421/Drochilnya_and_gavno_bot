@@ -5,6 +5,7 @@ from services.translations import tr
 from datetime import datetime
 from services.db import connect
 from services.user_utils import update_user_info
+from cooldown import cooldown
 
 LIMIT_PER_DAY = 6
 
@@ -41,21 +42,23 @@ async def handle_action(update: Update, context: ContextTypes.DEFAULT_TYPE, acti
     await update.message.reply_text(
     tr(chat_id, "action_recorded", emoji=emoji, count=count + 1, limit=LIMIT_PER_DAY)
 )
-
+    
+@cooldown("fap")
 async def handle_fap(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    update_user_info(update)
-
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
+
+    update_user_info(update)
     add_action(user_id, chat_id, "fap")
 
     await update.message.reply_text(tr(chat_id, "fap_recorded"))
 
+@cooldown("poop")
 async def handle_poop(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    update_user_info(update)
-
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
+
+    update_user_info(update)
     add_action(user_id, chat_id, "poop")
 
     await update.message.reply_text(tr(chat_id, "poop_recorded"))
