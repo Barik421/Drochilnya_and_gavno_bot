@@ -59,11 +59,17 @@ translations = {
         "uk": "{emoji} Записано! ({count} / {limit})",
         "en": "{emoji} Recorded! ({count} / {limit})"
     },
+    
     "reset_prompt": {"uk": "🔁 Ви дійсно хочете обнулити статистику?", "en": "🔁 Do you really want to reset stats?"},
     "confirm_reset": {"uk": "✅ Так, обнулити", "en": "✅ Yes, reset"},
     "cancel_reset": {"uk": "❌ Ні, скасувати", "en": "❌ No, cancel"},
     "reset_done": {"uk": "✅ Статистика обнулена!", "en": "✅ Stats have been reset!"},
-    "reset_canceled": {"uk": "❌ Скасовано.", "en": "❌ Cancelled."}
+    "reset_canceled": {"uk": "❌ Скасовано.", "en": "❌ Cancelled."},
+
+    "period": {
+    "uk": "Період",
+    "en": "Period"
+        },
 }
 
 

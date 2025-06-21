@@ -104,9 +104,11 @@ def clear_user_stats(user_id: int):
         conn.commit()    
 
 
-def get_user_stats(chat_id: int) -> dict:
+def get_user_stats(chat_id: int) -> tuple:
     with connect() as conn:
         cur = conn.cursor()
+
+        # Статистика по користувачах
         cur.execute('''
             SELECT user_id, action_type, COUNT(*) FROM actions
             WHERE chat_id = ?
@@ -114,10 +116,24 @@ def get_user_stats(chat_id: int) -> dict:
         ''', (chat_id,))
         rows = cur.fetchall()
 
+        # Дата найпершої дії в цьому чаті
+        cur.execute('''
+            SELECT MIN(timestamp) FROM actions WHERE chat_id = ?
+        ''', (chat_id,))
+        start_row = cur.fetchone()
+
     stats = {}
     for user_id, action_type, count in rows:
         if user_id not in stats:
             stats[user_id] = {"fap": 0, "poop": 0}
         stats[user_id][action_type] = count
-    return stats
+
+    # Конвертуємо ISO дату
+    start_date = None
+    if start_row and start_row[0]:
+        from datetime import datetime
+        start_date = datetime.fromisoformat(start_row[0])
+
+    return stats, start_date
+
        

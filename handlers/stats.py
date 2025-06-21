@@ -92,7 +92,9 @@ async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text, parse_mode="HTML")
 
 
+# Статистика таймерів
 
+from datetime import datetime
 from services.db import get_language, get_user_stats
 from telegram import Bot
 from services.translations import tr
@@ -103,13 +105,19 @@ async def send_stats(chat_id: int, bot: Bot = None):
         return
 
     lang = get_language(chat_id)
-    stats = get_user_stats(chat_id)
+    stats, start_date = get_user_stats(chat_id)
 
     if not stats:
         await bot.send_message(chat_id, tr(chat_id, "no_data"))
         return
 
-    text = f"📊 {'Статистика' if lang == 'uk' else 'Stats'}:\n\n"
+    today = datetime.utcnow().strftime("%d.%m.%Y")
+    start_str = start_date.strftime("%d.%m.%Y") if start_date else "?"
+
+    period_line = f"🗓️ {tr(chat_id, 'period')}: {start_str} — {today}"
+    title = "📊 Статистика" if lang == "uk" else "📊 Stats"
+
+    text = f"{title}\n{period_line}\n\n"
     sorted_stats = sorted(stats.items(), key=lambda x: (x[1]['fap'] + x[1]['poop']), reverse=True)
 
     for user_id, data in sorted_stats:
@@ -120,8 +128,3 @@ async def send_stats(chat_id: int, bot: Bot = None):
         text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await bot.send_message(chat_id, text)
-
-
-async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    await send_stats(chat_id, context.bot)
