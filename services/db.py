@@ -102,3 +102,22 @@ def clear_user_stats(user_id: int):
         cur = conn.cursor()
         cur.execute('DELETE FROM actions WHERE user_id = ?', (user_id,))
         conn.commit()    
+
+
+def get_user_stats(chat_id: int) -> dict:
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT user_id, action_type, COUNT(*) FROM actions
+            WHERE chat_id = ?
+            GROUP BY user_id, action_type
+        ''', (chat_id,))
+        rows = cur.fetchall()
+
+    stats = {}
+    for user_id, action_type, count in rows:
+        if user_id not in stats:
+            stats[user_id] = {"fap": 0, "poop": 0}
+        stats[user_id][action_type] = count
+    return stats
+       

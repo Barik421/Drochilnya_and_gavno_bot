@@ -91,3 +91,32 @@ async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(text, parse_mode="HTML")
 
+    
+
+from services.db import get_language, get_user_stats
+from telegram import Bot
+from services.translations import tr
+
+async def send_stats(chat_id: int, bot: Bot = None):
+    if not bot:
+        print("❌ Помилка: не передано bot для send_stats")
+        return
+
+    lang = get_language(chat_id)
+    stats = get_user_stats(chat_id)
+
+    if not stats:
+        await bot.send_message(chat_id, tr(chat_id, "no_data"))
+        return
+
+    text = f"📊 {'Статистика' if lang == 'uk' else 'Stats'}:\n\n"
+    sorted_stats = sorted(stats.items(), key=lambda x: (x[1]['fap'] + x[1]['poop']), reverse=True)
+
+    for user_id, data in sorted_stats:
+        faps = data['fap']
+        poops = data['poop']
+        kd = round(faps / poops, 2) if poops != 0 else "∞"
+
+        text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
+
+    await bot.send_message(chat_id, text)
