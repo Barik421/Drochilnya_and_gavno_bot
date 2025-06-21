@@ -7,7 +7,6 @@ from services.db import get_all_chat_ids, get_report_period, get_user_stats, get
 from handlers.stats import send_stats
 from services.translations import tr
 
-
 def start_scheduler(bot):
     scheduler = BackgroundScheduler()
 
@@ -18,7 +17,6 @@ def start_scheduler(bot):
     )
 
     scheduler.start()
-
 
 async def check_and_send_reports(bot):
     now = datetime.datetime.utcnow()
@@ -40,7 +38,6 @@ async def check_and_send_reports(bot):
         if day == 31 and month == 12:
             await send_winner_announcement(chat_id, bot)
 
-
 async def send_winner_announcement(chat_id: int, bot):
     stats, _ = get_user_stats(chat_id)
     if not stats:
@@ -59,14 +56,16 @@ async def send_winner_announcement(chat_id: int, bot):
             winners.append((user_id, data))
 
     lang = get_language(chat_id)
-    title = "🎉 Вітаю! Переможцем 2025 року по каканню й дрочінню стає:" if lang == "uk" else \
-            "🎉 Congratulations! The 2025 Champion of Pooping and Fapping is"
+    title = (
+        "🎉 Вітаю! Переможцем 2025 року по каканню й дрочінню стає:"
+        if lang == "uk"
+        else "🎉 Congratulations! The 2025 Champion of Pooping and Fapping is:"
+    )
 
     message = f"{title}\n"
-
     for user_id, data in winners:
-        faps = data['fap']
-        poops = data['poop']
+        faps = data["fap"]
+        poops = data["poop"]
         kd = round(faps / poops, 2) if poops != 0 else "∞"
         message += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
