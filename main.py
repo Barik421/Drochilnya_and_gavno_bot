@@ -9,7 +9,7 @@ from handlers.lang import handle_lang, handle_lang_choice
 from telegram.ext import CallbackQueryHandler
 from handlers.reset import handle_reset, handle_reset_callback
 from handlers.settings import handle_settings, handle_period_selection
-
+from telegram.ext import CallbackQueryHandler, CommandHandler
 
 
 
@@ -41,5 +41,11 @@ if __name__ == '__main__':
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
 
 
+import logging
 
-    app.run_polling()
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.ERROR
+)
+
+app.run_polling()
