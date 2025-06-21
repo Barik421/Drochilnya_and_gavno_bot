@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from telegram import Update
 
 # Підключення до бази
 def connect():
@@ -28,8 +29,18 @@ def init_db():
             report_period TEXT DEFAULT 'year'
         )
     ''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER,
+            chat_id INTEGER,
+            name TEXT,
+            allow_name INTEGER DEFAULT 0,
+            PRIMARY KEY (user_id, chat_id)
+        )
+    ''')
 
-        conn.commit()
+
+    conn.commit()
 
 # Додавання дії користувача
 def add_action(user_id: int, chat_id: int, action_type: str):
@@ -108,27 +119,32 @@ def get_user_stats(chat_id: int) -> tuple:
     with connect() as conn:
         cur = conn.cursor()
 
-        # Статистика по користувачах
         cur.execute('''
-            SELECT user_id, action_type, COUNT(*) FROM actions
-            WHERE chat_id = ?
-            GROUP BY user_id, action_type
+            SELECT a.user_id, a.action_type, COUNT(*), u.name, u.allow_name
+            FROM actions a
+            LEFT JOIN users u ON a.user_id = u.user_id AND a.chat_id = u.chat_id
+            WHERE a.chat_id = ?
+            GROUP BY a.user_id, a.action_type
         ''', (chat_id,))
         rows = cur.fetchall()
 
-        # Дата найпершої дії в цьому чаті
         cur.execute('''
             SELECT MIN(timestamp) FROM actions WHERE chat_id = ?
         ''', (chat_id,))
         start_row = cur.fetchone()
 
     stats = {}
-    for user_id, action_type, count in rows:
-        if user_id not in stats:
-            stats[user_id] = {"fap": 0, "poop": 0}
-        stats[user_id][action_type] = count
+    for user_id, action_type, count, name, allow_name in rows:
+        if allow_name and name:
+            display_name = name
+        else:
+            display_name = f"ID {user_id}"
 
-    # Конвертуємо ISO дату
+        if display_name not in stats:
+            stats[display_name] = {"fap": 0, "poop": 0}
+        stats[display_name][action_type] = count
+
+    # Дата початку
     start_date = None
     if start_row and start_row[0]:
         from datetime import datetime
@@ -136,4 +152,24 @@ def get_user_stats(chat_id: int) -> tuple:
 
     return stats, start_date
 
-       
+def get_all_chat_ids() -> list:
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT DISTINCT chat_id FROM actions")
+        rows = cur.fetchall()
+        return [row[0] for row in rows]       
+    
+
+def update_user_info(update: Update):
+    user = update.effective_user
+    chat_id = update.effective_chat.id
+    name = user.username or user.full_name
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            INSERT INTO users (user_id, chat_id, name, allow_name)
+            VALUES (?, ?, ?, 1)
+            ON CONFLICT(user_id, chat_id) DO UPDATE SET name = excluded.name, allow_name = 1
+        ''', (user.id, chat_id, name))
+        conn.commit()
