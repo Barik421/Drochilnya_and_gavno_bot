@@ -17,6 +17,8 @@ from handlers.reset import handle_reset, handle_reset_callback
 from handlers.settings import handle_settings, handle_period_selection
 from scheduler import start_scheduler
 from handlers.stats import handle_report_test
+from handlers.stats import handle_stats, send_stats, handle_report_test
+from handlers.stats import handle_winner_test
 
 # Налаштування логування
 logging.basicConfig(
@@ -48,7 +50,8 @@ async def main():
         BotCommand("reset", "♻️ Обнулити статистику"),
         BotCommand("fap", "✊ Додати дрочіння"),
         BotCommand("poop", "💩 Додати какання"),
-        BotCommand("reporttest", "🧪 Тест надсилання статистики")
+        BotCommand("reporttest", "🧪 Тест надсилання статистики"),
+        BotCommand("winner", "🏆 Тест переможця року")
     ]
     await app.bot.set_my_commands(commands)
 
@@ -64,6 +67,7 @@ async def main():
     app.add_handler(CommandHandler("settings", handle_settings))
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
     app.add_handler(CommandHandler("reporttest", handle_report_test))
+    app.add_handler(CommandHandler("winner", handle_winner_test))
     
 
     # Старт планувальника

@@ -130,3 +130,8 @@ async def send_stats(chat_id: int, bot: Bot = None):
     await bot.send_message(chat_id, text)
 
 
+from scheduler import send_winner_announcement
+
+async def handle_winner_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await send_winner_announcement(chat_id, context.bot)
