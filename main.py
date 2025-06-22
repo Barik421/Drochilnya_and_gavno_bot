@@ -17,6 +17,9 @@ from handlers.reset import handle_reset, handle_reset_callback
 from handlers.settings import handle_settings, handle_period_selection
 from scheduler import start_scheduler
 from handlers.stats import handle_stats, send_stats, handle_report_test, handle_winner_test
+from handlers.stats import handle_top
+
+
 
 
 # Налаштування логування
@@ -50,7 +53,8 @@ async def main():
         BotCommand("fap", "✊ Додати дрочіння"),
         BotCommand("poop", "💩 Додати какання"),
         BotCommand("reporttest", "🧪 Тест надсилання статистики"),
-        BotCommand("winner", "🏆 Тест переможця року")
+        BotCommand("winner", "🏆 Тест переможця року"),
+        BotCommand("top", "🏆 Топ користувачів"),
     ]
     await app.bot.set_my_commands(commands)
 
@@ -67,6 +71,7 @@ async def main():
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
     app.add_handler(CommandHandler("reporttest", handle_report_test))
     app.add_handler(CommandHandler("winner", handle_winner_test))
+    app.add_handler(CommandHandler("top", handle_top))
 
     # ✅ Обробник помилок
     from telegram.error import TelegramError

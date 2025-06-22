@@ -138,3 +138,28 @@ from scheduler import send_winner_announcement
 async def handle_winner_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     await send_winner_announcement(chat_id, context.bot)
+
+
+
+async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    lang = get_language(chat_id)
+    stats, _ = get_user_stats(chat_id)
+
+    if not stats:
+        await update.message.reply_text(tr(chat_id, "no_data"))
+        return
+
+    sorted_stats = sorted(
+        stats.items(),
+        key=lambda x: x[1]['fap'] + x[1]['poop'],
+        reverse=True
+    )
+
+    top_text = f"🏆 {tr(chat_id, 'top_title')}\n\n"
+    for i, (user_display, data) in enumerate(sorted_stats[:10], start=1):
+        faps = data['fap']
+        poops = data['poop']
+        top_text += f"{i}. {user_display} — ✊ {faps}, 💩 {poops}\n"
+
+    await update.message.reply_text(top_text)

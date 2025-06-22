@@ -4,8 +4,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 from services.db import get_all_chat_ids, get_report_period, get_user_stats, get_language
-from handlers.stats import send_stats
 from services.translations import tr
+from handlers.stats_utils import send_stats
+
 
 def start_scheduler(bot):
     scheduler = BackgroundScheduler()
