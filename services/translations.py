@@ -104,7 +104,11 @@ translations = {
     "no_data": {
         "uk": "🤷 Немає даних для статистики.",
         "en": "🤷 No data for statistics."
-    }
+    },
+    "full_stats_title": {
+    "uk": "📊 Повна статистика",
+    "en": "📊 Full Stats"
+}
                 
 }
 

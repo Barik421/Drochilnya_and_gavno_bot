@@ -1,6 +1,7 @@
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes
 from services.db import set_report_period, get_report_period
+from services.translations import tr
 
 # Команда /settings — показ кнопок вибору періоду
 async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
