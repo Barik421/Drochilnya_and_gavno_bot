@@ -161,3 +161,8 @@ def get_all_chat_ids() -> list:
         rows = cur.fetchall()
         return [row[0] for row in rows]       
     
+def clear_user_stats_for_chat(user_id: int, chat_id: int):
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM actions WHERE user_id = ? AND chat_id = ?", (user_id, chat_id))
+        conn.commit()

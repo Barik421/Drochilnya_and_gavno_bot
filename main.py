@@ -24,6 +24,7 @@ from handlers.help import handle_help
 
 
 
+
 # Налаштування логування
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -55,7 +56,8 @@ async def main():
         BotCommand("fap", "✊ Додати дрочіння"),
         BotCommand("poop", "💩 Додати какання"),
         BotCommand("top", "🏆 Топ користувачів"),
-        BotCommand("allstats", "📂 Вся статистика")
+        BotCommand("allstats", "📂 Вся статистика"),
+        BotCommand("help", "Пояснення команд")
     ]
     await app.bot.set_my_commands(commands)
 
@@ -74,7 +76,7 @@ async def main():
     app.add_handler(CommandHandler("allstats", handle_allstats))
     app.add_handler(CommandHandler("help", handle_help))
 
-
+    
     # ✅ Обробник помилок
     from telegram.error import TelegramError
 
