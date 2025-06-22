@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from services.db import connect, get_language, get_report_period, get_user_stats
 from services.translations import tr
 from services.db import get_report_period
-from services.db import get_report_period
+from scheduler import send_winner_announcement
 
 def calculate_period_start(period: str) -> datetime:
     now = datetime.utcnow()
@@ -102,12 +102,6 @@ async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 
-async def handle_winner_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    await send_winner_announcement(chat_id, context.bot)    
-
-
-
 async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
@@ -148,3 +142,37 @@ def format_stats_text(chat_id, stats, start_date=None, period=None):
         text += f"👤 {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     return text
+
+
+
+def calculate_period_start(period: str) -> datetime:
+    now = datetime.utcnow()
+    if period == "week":
+        return now - timedelta(days=7)
+    elif period == "month":
+        return now - timedelta(days=30)
+    elif period == "year":
+        return now - timedelta(days=365)
+    else:
+        return now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+def get_filtered_stats(chat_id: int, since: datetime):
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT a.user_id, a.action_type, COUNT(*), u.name, u.allow_name
+            FROM actions a
+            LEFT JOIN users u ON a.user_id = u.user_id AND a.chat_id = u.chat_id
+            WHERE a.chat_id = ? AND timestamp >= ?
+            GROUP BY a.user_id, a.action_type
+        ''', (chat_id, since.isoformat()))
+        rows = cur.fetchall()
+
+    stats = {}
+    for user_id, action_type, count, name, allow_name in rows:
+        display_name = name if allow_name and name else str(user_id)
+        if display_name not in stats:
+            stats[display_name] = {"fap": 0, "poop": 0}
+        stats[display_name][action_type] = count
+
+    return stats

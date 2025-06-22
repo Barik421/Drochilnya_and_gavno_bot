@@ -17,8 +17,8 @@ from handlers.settings import handle_settings, handle_period_selection
 from scheduler import start_scheduler
 from handlers.stats import handle_top
 from handlers.stats import handle_stats, handle_allstats
-from handlers.stats import handle_report_test
-from handlers.stats import handle_winner_test
+from scheduler import send_winner_announcement
+
 
 
 
@@ -53,7 +53,6 @@ async def main():
         BotCommand("reset", "♻️ Обнулити статистику"),
         BotCommand("fap", "✊ Додати дрочіння"),
         BotCommand("poop", "💩 Додати какання"),
-        BotCommand("winner", "🏆 Тест переможця року"),
         BotCommand("top", "🏆 Топ користувачів"),
         BotCommand("allstats", "📂 Вся статистика")
     ]
@@ -70,7 +69,6 @@ async def main():
     app.add_handler(CallbackQueryHandler(handle_reset_callback, pattern="^confirm_reset|cancel_reset$"))
     app.add_handler(CommandHandler("settings", handle_settings))
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
-    app.add_handler(CommandHandler("winner", handle_winner_test))
     app.add_handler(CommandHandler("top", handle_top))
     app.add_handler(CommandHandler("allstats", handle_allstats))
 
