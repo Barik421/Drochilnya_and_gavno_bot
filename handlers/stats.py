@@ -71,29 +71,22 @@ async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     lang = get_language(chat_id)
 
-    period = get_report_period(chat_id)
-    stats, _ = get_user_stats(chat_id, period=period)
+    # Статистика строго за рік
+    stats, _ = get_user_stats(chat_id, period="year")
 
     if not stats:
         await update.message.reply_text(tr(chat_id, "no_data"))
         return
 
-    # Сортуємо по сумі всіх дій
     sorted_stats = sorted(
         stats.items(),
         key=lambda x: x[1]['fap'] + x[1]['poop'],
         reverse=True
     )
 
-    period_text = {
-        "week": "за тиждень" if lang == "uk" else "this week",
-        "month": "за місяць" if lang == "uk" else "this month",
-        "year": "за рік" if lang == "uk" else "this year"
-    }.get(period, "")
-
     title = {
-        "uk": f"Топ користувачів {period_text}",
-        "en": f"Top users {period_text}"
+        "uk": "Топ користувачів за рік",
+        "en": "Top users this year"
     }.get(lang, "Top")
 
     text = f"🏆 {title}\n\n"
@@ -103,6 +96,7 @@ async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text += f"{i}. {user_display} — ✊ {faps}, 💩 {poops}\n"
 
     await update.message.reply_text(text)
+
 
 
 
