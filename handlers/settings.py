@@ -5,20 +5,26 @@ from services.translations import tr
 
 # Команда /settings — показ кнопок вибору періоду
 async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+
     keyboard = [
-    [
-        InlineKeyboardButton("Щотижня", callback_data="report_week"),
-        InlineKeyboardButton("Щомісяця", callback_data="report_month"),
-        InlineKeyboardButton("Щороку", callback_data="report_year"),
+        [
+            InlineKeyboardButton(tr(chat_id, "weekly"), callback_data="report_week"),
+            InlineKeyboardButton(tr(chat_id, "monthly"), callback_data="report_month"),
+            InlineKeyboardButton(tr(chat_id, "yearly"), callback_data="report_year"),
+        ]
     ]
-]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    current = get_report_period(update.effective_chat.id)
-    mapping = {"week": "Щотижня", "month": "Щомісяця", "year": "Щороку"}
+    current = get_report_period(chat_id)
+    mapping = {
+        "week": tr(chat_id, "weekly"),
+        "month": tr(chat_id, "monthly"),
+        "year": tr(chat_id, "yearly")
+    }
 
     await update.message.reply_text(
-        f"🔧 Обери як часто отримувати статистику:\n\nПоточне значення: {mapping.get(current, '📆 Щороку')}",
+        tr(chat_id, "settings_prompt", current=mapping.get(current, tr(chat_id, "yearly"))),
         reply_markup=reply_markup
     )
 

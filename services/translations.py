@@ -8,8 +8,8 @@ translations = {
         "en": "✅ Language saved!"
     },
     "settings_prompt": {
-        "uk": "🔧 Обери як часто отримувати статистику:\n\nПоточне значення: {value}",
-        "en": "🔧 Choose how often to receive stats:\n\nCurrent: {value}"
+        "uk": "🔧 Обери як часто отримувати та оновлювати статистику:\n\nПоточне значення: {value}",
+        "en": "🔧 Choose how often to receive and update stats:\n\nCurrent: {value}"
     },
     "period_saved": {
         "uk": "✅ Налаштування збережено.",
@@ -132,7 +132,28 @@ translations = {
     "period_label": {
         "uk": "🗓️ Статистика за {period}",
         "en": "🗓️ Stats for {period}"
-    }
+    },
+
+    "weekly": {
+    "uk": "Щотижня",
+    "en": "Weekly"
+    },
+    "monthly": {
+        "uk": "Щомісяця",
+        "en": "Monthly"
+    },
+    "yearly": {
+        "uk": "Щороку",
+        "en": "Yearly"
+    },
+    "settings_prompt": {
+        "uk": "🔧 Обери як часто отримувати та оновлювати статистику:\n\nПоточне значення: {current}",
+        "en": "🔧 Choose how often to receive and update statistics:\n\nCurrent value: {current}"
+    },
+    "period_saved": {
+        "uk": "✅ Період збережено.",
+        "en": "✅ Period saved."
+}
                 
 }
 
