@@ -19,6 +19,8 @@ from handlers.stats import handle_top
 from handlers.stats import handle_stats, handle_allstats
 from scheduler import send_winner_announcement
 from handlers.help import handle_help
+from handlers.misha import handle_misha_reply
+from telegram.ext import MessageHandler, filters
 
 
 
@@ -75,6 +77,8 @@ async def main():
     app.add_handler(CommandHandler("top", handle_top))
     app.add_handler(CommandHandler("allstats", handle_allstats))
     app.add_handler(CommandHandler("help", handle_help))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_misha_reply))
+
 
     
     # ✅ Обробник помилок
