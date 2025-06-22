@@ -67,6 +67,6 @@ async def send_winner_announcement(chat_id: int, bot):
         faps = data["fap"]
         poops = data["poop"]
         kd = round(faps / poops, 2) if poops != 0 else "∞"
-        message += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
+        message += f"👤 {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await bot.send_message(chat_id, message)

@@ -138,7 +138,7 @@ def get_user_stats(chat_id: int) -> tuple:
         if allow_name and name:
             display_name = name
         else:
-            display_name = f"ID {user_id}"
+            display_name = f"{user_id}"
 
         if display_name not in stats:
             stats[display_name] = {"fap": 0, "poop": 0}

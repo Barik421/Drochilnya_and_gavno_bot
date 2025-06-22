@@ -5,10 +5,12 @@ from services.db import set_report_period, get_report_period
 # Команда /settings — показ кнопок вибору періоду
 async def handle_settings(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
-        [InlineKeyboardButton("📅 Щотижня", callback_data="report_week")],
-        [InlineKeyboardButton("🗓 Щомісяця", callback_data="report_month")],
-        [InlineKeyboardButton("📆 Щороку", callback_data="report_year")]
+    [
+        InlineKeyboardButton("Щотижня", callback_data="report_week"),
+        InlineKeyboardButton("Щомісяця", callback_data="report_month"),
+        InlineKeyboardButton("Щороку", callback_data="report_year"),
     ]
+]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     current = get_report_period(update.effective_chat.id)

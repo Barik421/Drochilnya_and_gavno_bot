@@ -90,7 +90,7 @@ async def handle_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
         poops = data['poop']
         kd = round(faps / poops, 2) if poops != 0 else "∞"
 
-        text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
+        text += f"👤 {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await update.message.reply_text(text)
 
@@ -128,7 +128,7 @@ async def send_stats(chat_id: int, bot: Bot = None):
         poops = data['poop']
         kd = round(faps / poops, 2) if poops != 0 else "∞"
 
-        text += f"👤 ID {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
+        text += f"👤 {user_id} — ✊ {faps}, 💩 {poops}, КД: {kd}\n"
 
     await bot.send_message(chat_id, text)
 
