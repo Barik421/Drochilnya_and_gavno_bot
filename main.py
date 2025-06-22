@@ -18,6 +18,7 @@ from scheduler import start_scheduler
 from handlers.stats import handle_top
 from handlers.stats import handle_stats, handle_allstats
 from scheduler import send_winner_announcement
+from handlers.help import handle_help
 
 
 
@@ -71,6 +72,8 @@ async def main():
     app.add_handler(CallbackQueryHandler(handle_period_selection, pattern="^report_"))
     app.add_handler(CommandHandler("top", handle_top))
     app.add_handler(CommandHandler("allstats", handle_allstats))
+    app.add_handler(CommandHandler("help", handle_help))
+
 
     # ✅ Обробник помилок
     from telegram.error import TelegramError

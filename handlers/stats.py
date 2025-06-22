@@ -70,7 +70,9 @@ async def handle_allstats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     lang = get_language(chat_id)
-    stats, _ = get_user_stats(chat_id)
+
+    period = get_report_period(chat_id)
+    stats, _ = get_user_stats(chat_id, period=period)
 
     if not stats:
         await update.message.reply_text(tr(chat_id, "no_data"))
@@ -83,9 +85,15 @@ async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reverse=True
     )
 
+    period_text = {
+        "week": "за тиждень" if lang == "uk" else "this week",
+        "month": "за місяць" if lang == "uk" else "this month",
+        "year": "за рік" if lang == "uk" else "this year"
+    }.get(period, "")
+
     title = {
-        "uk": "Топ користувачів за кількістю дій",
-        "en": "Top users by actions"
+        "uk": f"Топ користувачів {period_text}",
+        "en": f"Top users {period_text}"
     }.get(lang, "Top")
 
     text = f"🏆 {title}\n\n"
@@ -95,10 +103,6 @@ async def handle_top(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text += f"{i}. {user_display} — ✊ {faps}, 💩 {poops}\n"
 
     await update.message.reply_text(text)
-
-async def handle_report_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    await send_stats(chat_id, context.bot)
 
 
 
