@@ -1,6 +1,8 @@
 import sqlite3
 from datetime import datetime
 from telegram import Update
+from telegram.ext import ContextTypes
+
 
 # Підключення до бази
 def connect():
@@ -115,7 +117,7 @@ def clear_user_stats(user_id: int):
         conn.commit()    
 
 
-def get_user_stats(chat_id: int) -> tuple:
+def get_user_stats(chat_id: int, period: str = None) -> tuple:
     with connect() as conn:
         cur = conn.cursor()
 

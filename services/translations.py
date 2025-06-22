@@ -108,7 +108,31 @@ translations = {
     "full_stats_title": {
     "uk": "📊 Повна статистика",
     "en": "📊 Full Stats"
-}
+    },
+    "period_label": {
+        "uk": "Статистика за {period}",
+        "en": "Stats for {period}"
+    },
+    "period_week": {
+        "uk": "тиждень",
+        "en": "week"
+    },
+    "period_month": {
+        "uk": "місяць",
+        "en": "month"
+    },
+    "period_year": {
+        "uk": "рік",
+        "en": "year"
+    },
+    "period_full": {
+    "uk": "весь час",
+    "en": "all time"
+    },
+    "period_label": {
+        "uk": "🗓️ Статистика за {period}",
+        "en": "🗓️ Stats for {period}"
+    }
                 
 }
 
